@@ -1,0 +1,11 @@
+*.pyc
+*.idea
+*.DS_Store
+.project
+.mymetadata
+.myumlddata
+*.iml
+/build
+dist/
+script/timedlog
+loan_crawler.egg-info/
