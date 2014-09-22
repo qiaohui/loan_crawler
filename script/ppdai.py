@@ -87,14 +87,14 @@ def crawl():
 
                         loan_obj.db_create(db)
 
-        logger.info("loan %s crawler: new size %s, update size %s", company_id, len(new_ids_set), len(update_ids_set))
+        logger.info("company %s crawler loan: new size %s, update size %s", company_id, len(new_ids_set), len(update_ids_set))
 
         # db - 新抓取的 = 就是要下线的
         off_ids_set = db_ids_set - online_ids_set
         if off_ids_set:
             loan_obj = Loan(company_id)
             loan_obj.db_offline(db, off_ids_set)
-            logger.info("loan %s crawler: offline %s", company_id, len(off_ids_set))
+            logger.info("company %s crawler loan: offline %s", company_id, len(off_ids_set))
 
     except:
         logger.error("url: %s xpath failed:%s", url, traceback.format_exc())

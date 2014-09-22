@@ -39,5 +39,4 @@ class Loan():
         self.schedule = "100%%"
         sql = "update loan set status=1,schedule='%s',update_time=now() where company_id='%s' and original_id in (%s)" % \
               (self.schedule, self.company_id, ", ".join("'" + s + "'" for s in off_ids_set))
-        print sql
         db.execute(sql)

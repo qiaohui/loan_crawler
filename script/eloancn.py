@@ -87,7 +87,7 @@ def crawl():
 
                     loan.db_create(db)
 
-            logger.info("loan %s crawler: new size %s, update size %s", company_id, len(new_ids_set), len(update_ids_set))
+            logger.info("company %s crawler loan: new size %s, update size %s", company_id, len(new_ids_set), len(update_ids_set))
 
             time.sleep(5)
 
@@ -96,7 +96,7 @@ def crawl():
         if off_ids_set:
             loan_obj_off = Loan(company_id)
             loan_obj_off.db_offline(db, off_ids_set)
-            logger.info("loan %s crawler: offline %s", company_id, len(off_ids_set))
+            logger.info("company %s crawler loan: offline %s", company_id, len(off_ids_set))
 
 
     except:
