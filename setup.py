@@ -11,8 +11,6 @@ except IOError:
 
 # PRE REQUIRED
 # sudo apt-get install -y --force-yes libxml2-dev libxslt1-dev libjpeg-dev libpng-dev python-mysqldb
-# sudo easy_install dateutils requests urllib3
-
 setup(
     name='loan_crawler',
     version=version,
@@ -29,12 +27,16 @@ setup(
                'script/jimubox.py',
                'script/ppdai.py',
                'script/yinhu.py',
+               'script/eloancn.py',
+               'script/lufax.py',
+               'script/tzydb.py',
+               'script/xinhehui.py',
+               'script/renrendai.py',
                ],
     license="8741.cn",
     dependency_links=[],
     install_requires = ["sqlalchemy",
                         "libxml2-dev",
-                        "python-mysqldb",
                         "redis",
                         "pymongo",
                         "zc-zookeeper-static",
@@ -63,3 +65,5 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
 )
+# sudo easy_install dateutils requests urllib3
+
