@@ -36,7 +36,6 @@ setup(
     license="8741.cn",
     dependency_links=[],
     install_requires = ["sqlalchemy",
-                        "libxml2-dev",
                         "redis",
                         "pymongo",
                         "zc-zookeeper-static",
