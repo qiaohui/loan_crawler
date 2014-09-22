@@ -1,0 +1,17 @@
+*/20 * * * * (cd /space/loan_crawler/script; python renrendai.py --use_logfile --verbose info)
+
+*/20 * * * * (cd /space/loan_crawler/script; python 91wangcai.py --use_logfile --verbose info)
+
+*/20 * * * * (cd /space/loan_crawler/script; python eloancn.py --use_logfile --verbose info)
+
+*/20 * * * * (cd /space/loan_crawler/script; python jimubox.py --use_logfile --verbose info)
+
+*/20 * * * * (cd /space/loan_crawler/script; python lufax.py --use_logfile --verbose info)
+
+*/20 * * * * (cd /space/loan_crawler/script; python ppdai.py --use_logfile --verbose info)
+
+*/20 * * * * (cd /space/loan_crawler/script; python tzydb.py --use_logfile --verbose info)
+
+*/20 * * * * (cd /space/loan_crawler/script; python xinhehui.py --use_logfile --verbose info)
+
+*/20 * * * * (cd /space/loan_crawler/script; python yinhu.py --use_logfile --verbose info)
