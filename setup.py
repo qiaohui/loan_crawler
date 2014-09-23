@@ -32,6 +32,7 @@ setup(
                'script/tzydb.py',
                'script/xinhehui.py',
                'script/renrendai.py',
+               'script/yirendai.py',
                ],
     license="8741.cn",
     dependency_links=[],

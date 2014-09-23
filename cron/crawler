@@ -15,3 +15,5 @@
 */20 * * * * root (cd /space/loan_crawler/script; /usr/local/bin/xinhehui.py --use_logfile --verbose info)
 
 */20 * * * * root (cd /space/loan_crawler/script; /usr/local/bin/yinhu.py --use_logfile --verbose info)
+
+*/20 * * * * root (cd /space/loan_crawler/script; /usr/local/bin/yirendai.py --use_logfile --verbose info)
