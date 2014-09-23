@@ -16,8 +16,10 @@ gflags.DEFINE_boolean('debug_parser', False, 'is debug?')
 
 DEFAULT_UA = "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0)"
 
+
 def download_page(url, headers, max_retry_count=5):
     return download(url, headers, max_retry=max_retry_count, throw_on_banned=True)
+
 
 def crawl():
     company_id = 7
@@ -46,10 +48,12 @@ def crawl():
     try:
         loan_htm = download_page(url, request_headers)
         loan_htm_parse = parse_html(loan_htm, encoding="UTF-8")
-        loans = loan_htm_parse.xpath("//div[@class='row']/div/div[@class='project-item']")
+        loans = loan_htm_parse.xpath("//div[@class='row']/div[@class='span3 project-card']")
         if len(loans) > 0:
             for loan in loans:
-                href = str(loan.xpath("div[@class='project-item-content']/h4/a/@href")[0])
+                href = str(loan.xpath("div[@class='project-item']/div[@class='project-item-content']/h4/a/@href")[0])
+                if not href.find("Index") > 0:
+                    continue
                 original_id = href.split("/")[3].encode("utf-8")
 
                 if original_id:
@@ -59,9 +63,9 @@ def crawl():
                     update_ids_set.add(original_id)
 
                     loan_obj = Loan(company_id, original_id)
-                    loan_obj.schedule = str(loan.xpath("div[@class='project-item-content']/div[@class='progress project-progress']/div/@style")[0])\
+                    loan_obj.schedule = str(loan.xpath("div[@class='project-item']/div[@class='project-item-content']/div[@class='progress project-progress']/div/@style")[0])\
                         .replace("width:", "").strip()
-                    loan_obj.cast = str(loan.xpath("div[@class='project-item-content']/p[@class='project-info']/span[@class='project-current-money']/text()")[0].encode("utf-8"))\
+                    loan_obj.cast = str(loan.xpath("div[@class='project-item']/div[@class='project-item-content']/p[@class='project-info']/span[@class='project-current-money']/text()")[0].encode("utf-8"))\
                         .strip().replace("/", "").replace(",", "")
                     loan_obj.db_update(db)
                 else:
@@ -69,24 +73,24 @@ def crawl():
 
                     loan_obj = Loan(company_id, original_id)
                     loan_obj.href = "http://www.jimubox.com" + href
-                    loan_obj.title = str(loan.xpath("div[@class='project-item-content']/h4/a/text()")[0].encode("utf-8"))
-                    loan_obj.description = str(loan.xpath("div[@class='project-item-content']/p[@class='project-detail']/text()")[0].encode("utf-8")).strip()
-                    loan_obj.borrow_amount = str(loan.xpath("div[@class='project-item-content']/p[@class='project-info']/span[@class='project-sum-money']/text()")[0].encode("utf-8"))\
+                    loan_obj.title = str(loan.xpath("div[@class='project-item']/div[@class='project-item-content']/h4/a/text()")[0].encode("utf-8"))
+                    loan_obj.description = str(loan.xpath("div[@class='project-item']/div[@class='project-item-content']/p[@class='project-detail']/text()")[0].encode("utf-8")).strip()
+                    loan_obj.borrow_amount = str(loan.xpath("div[@class='project-item']/div[@class='project-item-content']/p[@class='project-info']/span[@class='project-sum-money']/text()")[0].encode("utf-8"))\
                         .strip() + "0000"
-                    loan_obj.cast = str(loan.xpath("div[@class='project-item-content']/p[@class='project-info']/span[@class='project-current-money']/text()")[0].encode("utf-8"))\
+                    loan_obj.cast = str(loan.xpath("div[@class='project-item']/div[@class='project-item-content']/p[@class='project-info']/span[@class='project-current-money']/text()")[0].encode("utf-8"))\
                         .strip().replace("/", "").replace(",", "")
 
-                    rate = str(loan.xpath("div[@class='project-item-content']/div[@class='project-other']/div[@class='project-other-left']/span/text()")[0].encode("utf-8"))\
+                    rate = str(loan.xpath("div[@class='project-item']/div[@class='project-item-content']/div[@class='project-other']/div[@class='project-other-left']/span/text()")[0].encode("utf-8"))\
                         .strip()
                     if rate.find("+") > 0:
                         rate_list = rate.split("+")
                         loan_obj.rate = str(float(rate_list[0]) + float(rate_list[1]))
                     else:
                         loan_obj.rate = rate
-                    loan_obj.repayment_mothod = str(loan.xpath("div[@class='project-item-content']/h6/span/text()")[0].encode("utf-8"))
-                    loan_obj.loan_period = str(loan.xpath("div[@class='project-item-content']/div[@class='project-other']/div[@class='project-other-right']/span/text()")[0].encode("utf-8"))\
+                    loan_obj.repayment_mothod = str(loan.xpath("div[@class='project-item']/div[@class='project-item-content']/h6/span/text()")[0].encode("utf-8"))
+                    loan_obj.loan_period = str(loan.xpath("div[@class='project-item']/div[@class='project-item-content']/div[@class='project-other']/div[@class='project-other-right']/span/text()")[0].encode("utf-8"))\
                         .strip() + "个月"
-                    loan_obj.schedule = str(loan.xpath("div[@class='project-item-content']/div[@class='progress project-progress']/div/@style")[0])\
+                    loan_obj.schedule = str(loan.xpath("div[@class='project-item']/div[@class='project-item-content']/div[@class='progress project-progress']/div/@style")[0])\
                         .replace("width:", "").strip()
 
                     loan_obj.db_create(db)
