@@ -87,7 +87,7 @@ def crawl():
                         .encode("utf-8").replace("还款方式：", "")
 
                     loan_obj.schedule = autodecode(str(loan.xpath("div[@class='bd']/table/tr[2]/td[2]/text()")[0].encode("gb2312"))) \
-                        .encode("utf-8").replace("融资进度：", "").strip()
+                        .encode("utf-8").replace("融资进度：", "").replace("借款进度：", "").strip()
 
                     loan_obj.db_create(db)
 
