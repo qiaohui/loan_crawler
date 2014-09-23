@@ -4,6 +4,7 @@
 import gflags
 import logging
 import traceback
+import lxml
 
 from pygaga.helpers.logger import log_init
 from pygaga.helpers.dbutils import get_db_engine
@@ -20,9 +21,9 @@ def download_page(url, headers, max_retry_count=5):
     return download(url, headers, max_retry=max_retry_count, throw_on_banned=True)
 
 def crawl():
-    company_id = 4
-    url = "https://www.yinhu.com/loan/loan_list.bl"
-    request_headers = {'Referee': "https://www.yinhu.com", 'User-Agent': DEFAULT_UA}
+    company_id = 13
+    url = "http://www.yirendai.com/loan/list/1?period=12&currRate=&amt=&progress="
+    request_headers = {'Referee': "http://www.yirendai.com/loan/list/1", 'User-Agent': DEFAULT_UA}
 
     db = get_db_engine()
     db_ids = list(db.execute("select original_id from loan where company_id=%s and status=0", company_id))
@@ -34,8 +35,6 @@ def crawl():
     new_ids_set = set()
     # update
     update_ids_set = set()
-    # offline
-    off_ids_set = set()
 
     for id in db_ids:
         db_ids_set.add(id[0].encode("utf-8"))
@@ -48,45 +47,39 @@ def crawl():
     try:
         loan_htm = download_page(url, request_headers)
         loan_htm_parse = parse_html(loan_htm, encoding="UTF-8")
-        loans = loan_htm_parse.xpath("//div[@id='loan_list']/table/tbody/tr")
+        loans = loan_htm_parse.xpath("//ul[@class='bidList']/li")
         if len(loans) > 0:
             for loan in loans:
-                href = str(loan.xpath("td[1]/p/a/@href")[0])
-                original_id = href.split("=")[1].encode("utf-8")
-                try:
-                    loan_status = str(loan.xpath("td[last()]/em/span/text()")[0].encode("utf-8")).strip()
-                except:
-                    loan_status = str(loan.xpath("td[last()]/a/span/text()")[0].encode("utf-8")).strip()
-
-                if original_id and loan_status != "还款中":
-                    online_ids_set.add(original_id)
-
-                if loan_status == "还款中":
-                    if original_id in db_ids_set:
-                        off_ids_set.add(original_id)
+                if not loan.xpath("div[2]/div[2]/div/div[@class='bid_empty_errortip']"):
                     continue
+                href = str(loan.xpath("div[2]/div/h3/a/@href")[0])
+                original_id = href.split("/")[3]
+                if original_id:
+                    online_ids_set.add(original_id)
 
                 if original_id in db_ids_set:
                     update_ids_set.add(original_id)
 
                     loan_obj = Loan(company_id, original_id)
-                    loan_obj.schedule = str(loan.xpath("td[6]/div[@class='bar_bg']/div/span/span/text()")[0].encode("utf-8"))\
-                        .strip()
+                    loan_obj.borrow_amount = str(loan.xpath("div[2]/div/div[2]/h4/span/text()")[0].encode("utf-8"))\
+                        .strip().replace(",", "")
+                    loan_obj.cast = str(loan.xpath("div[2]/div/div[1]/p/text()")[0].encode("utf-8")).strip()\
+                        .replace("元", "").split("已投")[1]
+                    loan_obj.schedule = str(float(loan_obj.cast) / float(loan_obj.borrow_amount) * 100) + "%"
                     loan_obj.db_update(db)
                 else:
                     new_ids_set.add(original_id)
 
                     loan_obj = Loan(company_id, original_id)
-                    loan_obj.href = "https://www.yinhu.com" + href
-                    loan_obj.title = str(loan.xpath("td[1]/p/a/text()")[0].encode("utf-8")).strip()
-                    loan_obj.borrow_amount = str(loan.xpath("td[4]/text()")[0].encode("utf-8")).strip().replace(",", "")\
-                        .replace("元", "")
-
-                    loan_obj.rate = str(loan.xpath("td[3]/text()")[0].encode("utf-8")).strip()
-                    loan_obj.loan_period = str(loan.xpath("td[5]/text()")[0].encode("utf-8")).strip()
-
-                    loan_obj.schedule = str(loan.xpath("td[6]/div[@class='bar_bg']/div/span/span/text()")[0].encode("utf-8"))\
-                        .strip()
+                    loan_obj.href = "http://www.yirendai.com" + href
+                    loan_obj.title = str(loan.xpath("div[2]/div/h3/a/text()")[0].encode("utf-8")).strip()
+                    loan_obj.borrow_amount = str(loan.xpath("div[2]/div/div[2]/h4/span/text()")[0].encode("utf-8"))\
+                        .strip().replace(",", "")
+                    loan_obj.rate = str(loan.xpath("div[2]/div/div[3]/h4/span/text()")[0].encode("utf-8")).strip()
+                    loan_obj.loan_period = str(loan.xpath("div[2]/div/div[4]/h4/span/text()")[0].encode("utf-8")).strip() + "个月"
+                    loan_obj.cast = str(loan.xpath("div[2]/div/div[1]/p/text()")[0].encode("utf-8")).strip()\
+                        .replace("元", "").split("已投")[1]
+                    loan_obj.schedule = str(float(loan_obj.cast) / float(loan_obj.borrow_amount) * 100) + "%"
 
                     loan_obj.db_create(db)
 

@@ -20,8 +20,10 @@ gflags.DEFINE_boolean('debug_parser', False, 'is debug?')
 
 DEFAULT_UA = "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0)"
 
+
 def download_page(url, headers, max_retry_count=5):
     return download(url, headers, max_retry=max_retry_count, throw_on_banned=True)
+
 
 def crawl_wzdai():
     url = "https://www.wzdai.com/invest/index.html?status=1&page=1&order=-3"
