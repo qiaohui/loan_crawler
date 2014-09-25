@@ -4,11 +4,11 @@
 import gflags
 import logging
 import traceback
+import lxml
 
 from pygaga.helpers.logger import log_init
 from pygaga.helpers.dbutils import get_db_engine
 from pygaga.helpers.urlutils import download, parse_html
-from simplejson import loads
 from loan import Loan
 
 logger = logging.getLogger('CrawlLogger')
@@ -16,17 +16,14 @@ FLAGS = gflags.FLAGS
 gflags.DEFINE_boolean('debug_parser', False, 'is debug?')
 
 DEFAULT_UA = "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0)"
-REFEREE = "http://www.renrendai.com"
-
 
 def download_page(url, headers, max_retry_count=5):
     return download(url, headers, max_retry=max_retry_count, throw_on_banned=True)
 
-
 def crawl():
-    company_id = 12
-    url = "http://www.renrendai.com/lend/loanList.action"
-    request_headers = {'Referee': REFEREE, 'User-Agent': DEFAULT_UA}
+    company_id = 14
+    url = "http://www.licaifan.com"
+    request_headers = {'User-Agent': DEFAULT_UA}
 
     db = get_db_engine()
     db_ids = list(db.execute("select original_id from loan where company_id=%s and status=0", company_id))
@@ -48,18 +45,16 @@ def crawl():
         pdb.set_trace()
 
     try:
-        htm = download_page(url, request_headers)
-        htm_obj = parse_html(htm)
-        loans_script = htm_obj.xpath("//script[@id='loan-list-rsp']/text()")[0].encode("utf-8")
-        loans_json = loads(loans_script, encoding="UTF-8")
-        loan_size = len(loans_json["data"]["loans"])
-        if loan_size > 0:
-            for i in range(0, loan_size):
-                if loans_json["data"]["loans"][i]["status"] != "OPEN":
-                    #放弃已经结束的
+        loan_htm = download_page(url, request_headers)
+        loan_htm_parse = parse_html(loan_htm, encoding="UTF-8")
+        loans = loan_htm_parse.xpath("//ul[@class='main-list tab-con2']/li[1]/table/tr")
+        if len(loans) > 0:
+            # 这里注意第一行是表单标题，不需要，所以从1开始
+            for i in range(1, len(loans)):
+                if str(loans[i].xpath("td[last()]/a/text()")[0].encode("utf-8")) == "投资满额":
                     continue
-                original_id = str(int(loans_json["data"]["loans"][i]["loanId"]))
-                href = "http://www.renrendai.com/lend/detailPage.action?loanId=%s" % original_id
+                href = str(loans[i].xpath("td[1]/h3/a/@href")[0])
+                original_id = href.split("/")[3]
                 if original_id:
                     online_ids_set.add(original_id)
 
@@ -67,21 +62,24 @@ def crawl():
                     update_ids_set.add(original_id)
 
                     loan_obj = Loan(company_id, original_id)
-                    loan_obj.schedule = str(int(loans_json["data"]["loans"][i]["finishedRatio"])).split(".")[0]
-                    loan_obj.cast = str(float(loans_json["data"]["loans"][i]["amount"]) - float(loans_json["data"]["loans"][i]["surplusAmount"]))
+                    loan_obj.schedule = str(loans[i].xpath("td[5]/span/span[2]/text()")[0].encode("utf-8")).strip()\
+                        .replace("%", "")
                     loan_obj.db_update(db)
                 else:
-                    pass
                     new_ids_set.add(original_id)
 
                     loan_obj = Loan(company_id, original_id)
-                    loan_obj.href = href
-                    loan_obj.title = str(loans_json["data"]["loans"][i]["title"].encode("utf-8"))
-                    loan_obj.borrow_amount = str(loans_json["data"]["loans"][i]["amount"])
-                    loan_obj.period = str(int(loans_json["data"]["loans"][i]["months"])) + "个月"
-                    loan_obj.rate = str(loans_json["data"]["loans"][i]["interest"])
-                    loan_obj.cast = str(float(loans_json["data"]["loans"][i]["amount"]) - float(loans_json["data"]["loans"][i]["surplusAmount"]))
-                    loan_obj.schedule = str(int(loans_json["data"]["loans"][i]["finishedRatio"])).split(".")[0]
+                    loan_obj.href = "http://www.licaifan.com" + href
+                    loan_obj.title = str(loans[i].xpath("td[1]/h3/a/text()")[0].encode("utf-8")).strip()
+                    loan_obj.borrow_amount = str(loans[i].xpath("td[3]/text()")[0].encode("utf-8"))\
+                        .strip().replace(",", "")
+                    if loan_obj.borrow_amount.find("万") > 0:
+                        loan_obj.borrow_amount = int(loan_obj.borrow_amount.replace("万", "")) * 10000
+                    loan_obj.rate = str(loans[i].xpath("td[2]/text()")[0].encode("utf-8")).strip().replace("%", "")
+                    loan_obj.period = str(loans[i].xpath("td[4]/text()")[0].encode("utf-8")).strip()
+                    loan_obj.schedule = str(loans[i].xpath("td[5]/span/span[2]/text()")[0].encode("utf-8")).strip()\
+                        .replace("%", "")
+
                     loan_obj.db_create(db)
 
         logger.info("company %s crawler loan: new size %s, update size %s", company_id, len(new_ids_set), len(update_ids_set))

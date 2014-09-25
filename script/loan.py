@@ -10,16 +10,16 @@ class Loan():
         self.description = ""
         self.borrow_amount = ""
         self.rate = ""
-        self.loan_period = ""
+        self.period = ""
         self.repayment_mothod = ""
         self.cast = ""
         self.schedule = ""
 
     def db_create(self, db):
-        db.execute("insert into loan (company_id,original_id,url,title,description,borrow_amount,rate,loan_period,"
+        db.execute("insert into loan (company_id,original_id,url,title,description,borrow_amount,rate,period,"
                   "repayment_mothod,cast,schedule,crawl_status,status,create_time,update_time) "
                    "values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,0,0,now(),now())", self.company_id,self.original_id, self.href,
-                   self.title, self.description, self.borrow_amount, self.rate, self.loan_period, self.repayment_mothod,
+                   self.title, self.description, self.borrow_amount, self.rate, self.period, self.repayment_mothod,
                    self.cast, self.schedule)
 
     def db_update(self, db):

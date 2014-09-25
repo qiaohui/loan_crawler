@@ -60,7 +60,7 @@ def crawl():
                     update_ids_set.add(original_id)
 
                     loan_obj = Loan(company_id, original_id)
-                    loan_obj.schedule = str(float(loans_json["data"][i]["progress"]) * 100) + "%"
+                    loan_obj.schedule = str(float(loans_json["data"][i]["progress"]) * 100)
                     loan_obj.cast = str(int(loans_json["data"][i]["raisedAmount"]))
                     loan_obj.db_update(db)
                 else:
@@ -70,10 +70,10 @@ def crawl():
                     loan_obj.href = "https://list.lufax.com/list/productDetail?productId=%s" % original_id
                     loan_obj.title = loans_json["data"][i]["productNameDisplay"]
                     loan_obj.rate = str(float(loans_json["data"][i]["interestRate"]) * 100)
-                    loan_obj.loan_period = str(loans_json["data"][i]["investPeriodDisplay"].encode("utf-8"))
+                    loan_obj.period = str(loans_json["data"][i]["investPeriodDisplay"].encode("utf-8"))
                     loan_obj.repayment_mothod = loans_json["data"][i]["collectionModeDisplay"]
                     loan_obj.borrow_amount = str(int(loans_json["data"][i]["price"]))
-                    loan_obj.schedule = str(float(loans_json["data"][i]["progress"]) * 100) + "%"
+                    loan_obj.schedule = str(float(loans_json["data"][i]["progress"]) * 100)
                     loan_obj.cast = str(int(loans_json["data"][i]["raisedAmount"]))
                     loan_obj.db_create(db)
 

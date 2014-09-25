@@ -70,7 +70,7 @@ def crawl():
                         update_ids_set.add(original_id)
 
                         loan_obj = Loan(company_id, original_id)
-                        loan_obj.schedule = str(loan.xpath("td[last()]/p[1]/text()")[0].encode("UTF-8")).strip().replace(" ", "").split("完成")[1]
+                        loan_obj.schedule = str(loan.xpath("td[last()]/p[1]/text()")[0].encode("UTF-8")).strip().replace(" ", "").replace("%", "").split("完成")[1]
                         loan_obj.db_update(db)
                     else:
                         new_ids_set.add(original_id)
@@ -82,8 +82,8 @@ def crawl():
                         loan_obj.borrow_amount = str(loan.xpath("td[3]/text()")[0].encode("UTF-8")).strip().replace("¥", "")\
                             .replace(",", "")
                         loan_obj.rate = str(loan.xpath("td[4]/text()")[0]).strip().replace("%", "")
-                        loan_obj.loan_period = str(loan.xpath("td[5]/text()")[0].encode("UTF-8")).strip().replace(" ", "")
-                        loan_obj.schedule = str(loan.xpath("td[last()]/p[1]/text()")[0].encode("UTF-8")).strip().replace(" ", "").split("完成")[1]
+                        loan_obj.period = str(loan.xpath("td[5]/text()")[0].encode("UTF-8")).strip().replace(" ", "")
+                        loan_obj.schedule = str(loan.xpath("td[last()]/p[1]/text()")[0].encode("UTF-8")).strip().replace(" ", "").replace("%", "").split("完成")[1]
 
                         loan_obj.db_create(db)
 

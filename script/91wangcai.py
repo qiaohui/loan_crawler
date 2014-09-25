@@ -63,7 +63,7 @@ def crawl():
 
                     loan_obj = Loan(company_id, original_id)
                     loan_obj.schedule = autodecode(str(loan.xpath("div[@class='bd']/table/tr[2]/td[2]/text()")[0].encode("gb2312"))) \
-                        .encode("utf-8").replace("融资进度：", "").strip()
+                        .encode("utf-8").replace("融资进度：", "").replace("借款进度：", "").strip().replace("%", "")
                     loan_obj.db_update(db)
                 else:
                     new_ids_set.add(original_id)
@@ -81,13 +81,13 @@ def crawl():
                     loan_period_text = lxml.html.tostring(loan.xpath("div[@class='bd']/table/tr[1]/td[3]/*")[0]) \
                         .replace("<em>", "").replace("</em>", "")
                     html_parser = HTMLParser.HTMLParser()
-                    loan_obj.loan_period = html_parser.unescape(loan_period_text).encode("utf-8").strip()
+                    loan_obj.period = html_parser.unescape(loan_period_text).encode("utf-8").strip()
 
                     loan_obj.repayment_mothod = autodecode(str(loan.xpath("div[@class='bd']/table/tr[2]/td[1]/text()")[0].encode("gb2312"))) \
                         .encode("utf-8").replace("还款方式：", "")
 
                     loan_obj.schedule = autodecode(str(loan.xpath("div[@class='bd']/table/tr[2]/td[2]/text()")[0].encode("gb2312"))) \
-                        .encode("utf-8").replace("融资进度：", "").replace("借款进度：", "").strip()
+                        .encode("utf-8").replace("融资进度：", "").replace("借款进度：", "").strip().replace("%", "")
 
                     loan_obj.db_create(db)
 
