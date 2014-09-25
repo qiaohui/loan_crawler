@@ -33,6 +33,7 @@ setup(
                'script/xinhehui.py',
                'script/renrendai.py',
                'script/yirendai.py',
+               'script/licaifan.py',
                ],
     license="8741.cn",
     dependency_links=[],
