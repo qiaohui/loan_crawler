@@ -35,6 +35,7 @@ setup(
                'script/yirendai.py',
                'script/licaifan.py',
                'script/iqianbang.py',
+               'script/touna.py',
                ],
     license="8741.cn",
     dependency_links=[],
