@@ -20,3 +20,4 @@
 
 */20 * * * * root (cd /space/loan_crawler/script; /usr/local/bin/licaifan.py --use_logfile --verbose info)
 
+*/20 * * * * root (cd /space/loan_crawler/script; /usr/local/bin/iqianbang.py --use_logfile --verbose info)

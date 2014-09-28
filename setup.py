@@ -34,6 +34,7 @@ setup(
                'script/renrendai.py',
                'script/yirendai.py',
                'script/licaifan.py',
+               'script/iqianbang.py',
                ],
     license="8741.cn",
     dependency_links=[],
