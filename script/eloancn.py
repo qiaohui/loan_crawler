@@ -82,7 +82,6 @@ def crawl():
                     update_ids_set.add(loan.original_id)
 
                     loan.db_update(db)
-                    print loan.original_id, loan.schedule
                 else:
                     new_ids_set.add(loan.original_id)
 

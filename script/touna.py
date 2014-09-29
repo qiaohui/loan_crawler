@@ -87,7 +87,7 @@ def crawl():
                         loan_obj.rate = loan["apr"]
                         loan_obj.schedule = str(loan["score"])
                         loan_obj.repayment_mothod = loan["style_name"]
-                        period = str(loan["time_limit_name"])
+                        period = str(loan["time_limit_name"].encode("utf-8"))
                         if period.find(loan_obj.PERIOD_UNIT_DAY) > 0:
                             loan_obj.period = period.replace(loan_obj.PERIOD_UNIT_DAY, "")
                             loan_obj.period_unit = loan_obj.PERIOD_UNIT_DAY
