@@ -61,7 +61,7 @@ def crawl():
                 if original_id and loan_status != "还款中":
                     online_ids_set.add(original_id)
 
-                if loan_status == "还款中":
+                if loan_status == "还款中" or loan_status == "满标":
                     if original_id in db_ids_set:
                         off_ids_set.add(original_id)
                     continue
