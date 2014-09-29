@@ -47,7 +47,7 @@ def crawl():
     try:
         for p in range(1, 4):
             url = "http://www.eloancn.com/new/loadAllTender.action?page=%s" % p
-            print url
+            logger.info("page url:%s", url)
             # 这个页面比较恶心，一个标的的属性不在一个div内
             loan_htm = download_page(url, request_headers)
             loan_htm_parse = parse_html(loan_htm, encoding="UTF-8")
@@ -67,7 +67,8 @@ def crawl():
                 loan_list[index].borrow_amount = str(h2.xpath("p[@class='colorCb mt10']/text()")[0].encode("utf-8")).replace("￥","").replace(",","")
                 loan_list[index].rate = str(h2.xpath("p[@class='colorE6']/span/text()")[0]).replace("%", "")
             for index, h3 in enumerate(htm_3):
-                loan_list[index].period = str(h3.xpath("p/span/text()")[0].encode("utf-8")) + "个月"
+                loan_list[index].period = str(h3.xpath("p/span/text()")[0].encode("utf-8"))
+                loan_list[index].period_unit = loan_obj.PERIOD_UNIT_MONTH
                 loan_list[index].repayment_mothod = str(h3.xpath("p[@class='']/text()")[0].encode("utf-8"))
             for index, h4 in enumerate(htm_4):
                 loan_list[index].schedule = str(h4.xpath("p/span/em/text()")[0]).strip().replace("%", "")

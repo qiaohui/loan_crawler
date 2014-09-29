@@ -78,7 +78,8 @@ def crawl():
                     loan_obj.href = href
                     loan_obj.title = str(loans_json["data"]["loans"][i]["title"].encode("utf-8"))
                     loan_obj.borrow_amount = str(loans_json["data"]["loans"][i]["amount"])
-                    loan_obj.period = str(int(loans_json["data"]["loans"][i]["months"])) + "个月"
+                    loan_obj.period = str(int(loans_json["data"]["loans"][i]["months"]))
+                    loan_obj.period_unit = loan_obj.PERIOD_UNIT_MONTH
                     loan_obj.rate = str(loans_json["data"]["loans"][i]["interest"])
                     loan_obj.cast = str(float(loans_json["data"]["loans"][i]["amount"]) - float(loans_json["data"]["loans"][i]["surplusAmount"]))
                     loan_obj.schedule = str(int(loans_json["data"]["loans"][i]["finishedRatio"])).split(".")[0]

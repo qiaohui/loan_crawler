@@ -76,7 +76,8 @@ def crawl():
                     loan_obj.borrow_amount = str(loan.xpath("div[2]/div/div[2]/h4/span/text()")[0].encode("utf-8"))\
                         .strip().replace(",", "")
                     loan_obj.rate = str(loan.xpath("div[2]/div/div[3]/h4/span/text()")[0].encode("utf-8")).strip()
-                    loan_obj.period = str(loan.xpath("div[2]/div/div[4]/h4/span/text()")[0].encode("utf-8")).strip() + "个月"
+                    loan_obj.period = str(loan.xpath("div[2]/div/div[4]/h4/span/text()")[0].encode("utf-8")).strip()
+                    loan_obj.period_unit = loan_obj.PERIOD_UNIT_MONTH
                     loan_obj.cast = str(loan.xpath("div[2]/div/div[1]/p/text()")[0].encode("utf-8")).strip()\
                         .replace("元", "").split("已投")[1]
                     loan_obj.schedule = str(float(loan_obj.cast) / float(loan_obj.borrow_amount) * 100)

@@ -1,7 +1,12 @@
-__author__ = 'qiaohui'
+#! /usr/bin/env python
+# coding: utf-8
 
 
 class Loan():
+
+    PERIOD_UNIT_DAY = "天"
+    PERIOD_UNIT_MONTH = "月"
+
     def __init__(self, company_id, original_id=""):
         self.company_id = company_id
         self.original_id = original_id
@@ -11,16 +16,17 @@ class Loan():
         self.borrow_amount = ""
         self.rate = ""
         self.period = ""
+        self.period_unit = ""
         self.repayment_mothod = ""
         self.cast = ""
         self.schedule = ""
 
     def db_create(self, db):
-        db.execute("insert into loan (company_id,original_id,url,title,description,borrow_amount,rate,period,"
+        db.execute("insert into loan (company_id,original_id,url,title,description,borrow_amount,rate,period,period_unit,"
                   "repayment_mothod,cast,schedule,crawl_status,status,create_time,update_time) "
-                   "values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,0,0,now(),now())", self.company_id,self.original_id, self.href,
-                   self.title, self.description, self.borrow_amount, self.rate, self.period, self.repayment_mothod,
-                   self.cast, self.schedule)
+                   "values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,0,0,now(),now())", self.company_id, self.original_id,
+                   self.href, self.title, self.description, self.borrow_amount, self.rate, self.period, self.period_unit,
+                   self.repayment_mothod, self.cast, self.schedule)
 
     def db_update(self, db):
         set_list = []

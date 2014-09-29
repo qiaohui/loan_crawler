@@ -70,7 +70,13 @@ def crawl():
                     loan_obj.href = "https://list.lufax.com/list/productDetail?productId=%s" % original_id
                     loan_obj.title = loans_json["data"][i]["productNameDisplay"]
                     loan_obj.rate = str(float(loans_json["data"][i]["interestRate"]) * 100)
-                    loan_obj.period = str(loans_json["data"][i]["investPeriodDisplay"].encode("utf-8"))
+                    period = str(loans_json["data"][i]["investPeriodDisplay"].encode("utf-8"))
+                    if period.find(loan_obj.PERIOD_UNIT_DAY) > 0:
+                        loan_obj.period = period.replace(loan_obj.PERIOD_UNIT_DAY, "")
+                        loan_obj.period_unit = loan_obj.PERIOD_UNIT_DAY
+                    else:
+                        loan_obj.period = period.replace("个", "").replace(loan_obj.PERIOD_UNIT_MONTH, "")
+                        loan_obj.period_unit = loan_obj.PERIOD_UNIT_MONTH
                     loan_obj.repayment_mothod = loans_json["data"][i]["collectionModeDisplay"]
                     loan_obj.borrow_amount = str(int(loans_json["data"][i]["price"]))
                     loan_obj.schedule = str(float(loans_json["data"][i]["progress"]) * 100)

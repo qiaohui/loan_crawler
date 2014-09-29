@@ -81,7 +81,13 @@ def crawl():
                     loan_period_text = lxml.html.tostring(loan.xpath("div[@class='bd']/table/tr[1]/td[3]/*")[0]) \
                         .replace("<em>", "").replace("</em>", "")
                     html_parser = HTMLParser.HTMLParser()
-                    loan_obj.period = html_parser.unescape(loan_period_text).encode("utf-8").strip()
+                    period = html_parser.unescape(loan_period_text).encode("utf-8").strip()
+                    if period.find(loan_obj.PERIOD_UNIT_DAY) > 0:
+                        loan_obj.period = period.replace(loan_obj.PERIOD_UNIT_DAY, "")
+                        loan_obj.period_unit = loan_obj.PERIOD_UNIT_DAY
+                    else:
+                        loan_obj.period = period.replace("个", "").replace(loan_obj.PERIOD_UNIT_MONTH, "")
+                        loan_obj.period_unit = loan_obj.PERIOD_UNIT_MONTH
 
                     loan_obj.repayment_mothod = autodecode(str(loan.xpath("div[@class='bd']/table/tr[2]/td[1]/text()")[0].encode("gb2312"))) \
                         .encode("utf-8").replace("还款方式：", "")

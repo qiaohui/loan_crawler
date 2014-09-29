@@ -52,7 +52,7 @@ def crawl():
 
         for p in range(1, int(page) + 1):
             url = "http://www.ppdai.com/lend/12_s1_p" + str(p)
-            print url
+            logger.info("page url: %s", url)
 
             loan_htm = download_page(url, request_headers)
             loan_obj = parse_html(loan_htm)
@@ -82,8 +82,15 @@ def crawl():
                         loan_obj.borrow_amount = str(loan.xpath("td[3]/text()")[0].encode("UTF-8")).strip().replace("¥", "")\
                             .replace(",", "")
                         loan_obj.rate = str(loan.xpath("td[4]/text()")[0]).strip().replace("%", "")
-                        loan_obj.period = str(loan.xpath("td[5]/text()")[0].encode("UTF-8")).strip().replace(" ", "")
-                        loan_obj.schedule = str(loan.xpath("td[last()]/p[1]/text()")[0].encode("UTF-8")).strip().replace(" ", "").replace("%", "").split("完成")[1]
+                        period = str(loan.xpath("td[5]/text()")[0].encode("UTF-8")).strip().replace(" ", "")
+                        if period.find(loan_obj.PERIOD_UNIT_DAY) > 0:
+                            loan_obj.period = period.replace(loan_obj.PERIOD_UNIT_DAY, "")
+                            loan_obj.period_unit = loan_obj.PERIOD_UNIT_DAY
+                        else:
+                            loan_obj.period = period.replace("个", "").replace(loan_obj.PERIOD_UNIT_MONTH, "")
+                            loan_obj.period_unit = loan_obj.PERIOD_UNIT_MONTH
+
+                        loan_obj.schedule = float(str(loan.xpath("td[last()]/p[1]/text()")[0].encode("UTF-8")).strip().replace(" ", "").replace("%", "").split("完成")[1])
 
                         loan_obj.db_create(db)
 

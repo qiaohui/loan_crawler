@@ -77,7 +77,13 @@ def crawl():
                     loan_obj.borrow_amount = int(loan.xpath("p/span[3]/strong/text()")[0]) * 10000
 
                     loan_obj.rate = str(loan.xpath("p/span[5]/em[1]/text()")[0].encode("utf-8")).strip().replace("%", "")
-                    loan_obj.period = str(loan.xpath("p/span[4]/strong/text()")[0].encode("utf-8")).strip()
+                    period = str(loan.xpath("p/span[4]/strong/text()")[0].encode("utf-8")).strip()
+                    if period.find(loan_obj.PERIOD_UNIT_DAY) > 0:
+                        loan_obj.period = period.replace(loan_obj.PERIOD_UNIT_DAY, "")
+                        loan_obj.period_unit = loan_obj.PERIOD_UNIT_DAY
+                    else:
+                        loan_obj.period = period.replace("个", "").replace(loan_obj.PERIOD_UNIT_MONTH, "")
+                        loan_obj.period_unit = loan_obj.PERIOD_UNIT_MONTH
 
                     # 这个进度这块还不确定，需等有标时检查一遍
                     if loan.xpath("div[@class='i-p-c-subscription']/div[@class='i-p-c-s-detail']"):
