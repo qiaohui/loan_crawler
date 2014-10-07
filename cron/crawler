@@ -23,3 +23,5 @@
 */20 * * * * root (cd /space/loan_crawler/script; /usr/local/bin/iqianbang.py --use_logfile --verbose info)
 
 */20 * * * * root (cd /space/loan_crawler/script; /usr/local/bin/touna.py --use_logfile --verbose info)
+
+*/20 * * * * root (cd /space/loan_crawler/script; /usr/local/bin/my089.py --use_logfile --verbose info)

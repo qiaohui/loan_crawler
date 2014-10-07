@@ -36,6 +36,7 @@ setup(
                'script/licaifan.py',
                'script/iqianbang.py',
                'script/touna.py',
+               'script/my089.py',
                ],
     license="8741.cn",
     dependency_links=[],
