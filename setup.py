@@ -39,6 +39,7 @@ setup(
                'script/my089.py',
                'script/qian360.py',
                'script/xiaomabank.py',
+               'script/id68.py',
                ],
     license="8741.cn",
     dependency_links=[],

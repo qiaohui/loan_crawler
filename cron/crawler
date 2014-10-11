@@ -29,3 +29,5 @@
 */20 * * * * root (cd /space/loan_crawler/script; /usr/local/bin/qian360.py --use_logfile --verbose info)
 
 */20 * * * * root (cd /space/loan_crawler/script; /usr/local/bin/xiaomabank.py --use_logfile --verbose info)
+
+*/20 * * * * root (cd /space/loan_crawler/script; /usr/local/bin/id68.py --use_logfile --verbose info)
