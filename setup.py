@@ -42,6 +42,8 @@ setup(
                'script/id68.py',
                'script/weidai.py',
                'script/niwodai.py',
+               'script/he-pai.py',
+               'script/tuandai.py',
                ],
     license="8741.cn",
     dependency_links=[],
