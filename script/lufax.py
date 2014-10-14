@@ -77,7 +77,7 @@ def crawl():
                     else:
                         loan_obj.period = period.replace("个", "").replace(loan_obj.PERIOD_UNIT_MONTH, "")
                         loan_obj.period_unit = loan_obj.PERIOD_UNIT_MONTH
-                    loan_obj.repayment_mothod = loans_json["data"][i]["collectionModeDisplay"]
+                    loan_obj.repayment = loans_json["data"][i]["collectionModeDisplay"]
                     loan_obj.borrow_amount = str(int(loans_json["data"][i]["price"]))
                     loan_obj.schedule = str(float(loans_json["data"][i]["progress"]) * 100)
                     loan_obj.cast = str(int(loans_json["data"][i]["raisedAmount"]))

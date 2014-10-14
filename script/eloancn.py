@@ -69,7 +69,7 @@ def crawl():
             for index, h3 in enumerate(htm_3):
                 loan_list[index].period = str(h3.xpath("p/span/text()")[0].encode("utf-8"))
                 loan_list[index].period_unit = loan_obj.PERIOD_UNIT_MONTH
-                loan_list[index].repayment_mothod = str(h3.xpath("p[@class='']/text()")[0].encode("utf-8"))
+                loan_list[index].repayment = str(h3.xpath("p[@class='']/text()")[0].encode("utf-8"))
             for index, h4 in enumerate(htm_4):
                 loan_list[index].schedule = str(h4.xpath("p/span/em/text()")[0]).strip().replace("%", "")
 

@@ -86,7 +86,7 @@ def crawl():
                         loan_obj.period_unit = loan_obj.PERIOD_UNIT_MONTH
                         loan_obj.schedule = str(loan["ProgressPercent"])
                         loan_obj.cast = loan["ProgressAmount"]
-                        loan_obj.repayment_mothod = loan["RepaymentTypeDesc"]
+                        loan_obj.repayment = loan["RepaymentTypeDesc"]
 
                         loan_obj.db_create(db)
 

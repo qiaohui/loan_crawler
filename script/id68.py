@@ -74,7 +74,7 @@ def crawl():
                     loan_obj.title = str(loan.xpath("table/tr[1]/td[1]/a/@title")[0].encode("utf-8")).strip()
                     loan_obj.borrow_amount = str(loan.xpath("table/tr[2]/td[last()]/span/text()")[0].encode("utf-8"))\
                         .strip().replace(" ", "").replace(",", "")
-                    loan_obj.repayment_mothod = str(loan.xpath("table/tr[2]/td[4]/span/text()")[0].encode("utf-8")).strip()
+                    loan_obj.repayment = str(loan.xpath("table/tr[2]/td[4]/span/text()")[0].encode("utf-8")).strip()
                     loan_obj.rate = str(loan.xpath("table/tr[2]/td[2]/span/text()")[0].encode("utf-8")).strip().replace("%", "")
                     loan_obj.period = str(loan.xpath("table/tr[2]/td[3]/span/text()")[0].encode("utf-8")).strip()\
                         .replace(" ", "").replace("个月", "")

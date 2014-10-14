@@ -87,7 +87,7 @@ def crawl():
                         loan_obj.rate = str(float(rate_list[0]) + float(rate_list[1]))
                     else:
                         loan_obj.rate = rate
-                    loan_obj.repayment_mothod = str(loan.xpath("div[@class='project-item']/div[@class='project-item-content']/h6/span/text()")[0].encode("utf-8"))
+                    loan_obj.repayment = str(loan.xpath("div[@class='project-item']/div[@class='project-item-content']/h6/span/text()")[0].encode("utf-8"))
                     loan_obj.period = str(loan.xpath("div[@class='project-item']/div[@class='project-item-content']/div[@class='project-other']/div[@class='project-other-right']/span/text()")[0].encode("utf-8"))\
                         .strip()
                     loan_obj.period_unit = loan_obj.PERIOD_UNIT_MONTH

@@ -89,7 +89,7 @@ def crawl():
                         loan_obj.period = period.replace("个", "").replace(loan_obj.PERIOD_UNIT_MONTH, "")
                         loan_obj.period_unit = loan_obj.PERIOD_UNIT_MONTH
 
-                    loan_obj.repayment_mothod = autodecode(str(loan.xpath("div[@class='bd']/table/tr[2]/td[1]/text()")[0].encode("gb2312"))) \
+                    loan_obj.repayment = autodecode(str(loan.xpath("div[@class='bd']/table/tr[2]/td[1]/text()")[0].encode("gb2312"))) \
                         .encode("utf-8").replace("还款方式：", "")
 
                     loan_obj.schedule = autodecode(str(loan.xpath("div[@class='bd']/table/tr[2]/td[2]/text()")[0].encode("gb2312"))) \

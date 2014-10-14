@@ -72,7 +72,7 @@ def crawl():
                     loan_obj = Loan(company_id, original_id)
                     loan_obj.href = "http://www.itouzi.com" + href
                     loan_obj.title = str(loan.xpath("h2/a[@class='fl']/text()")[0].encode("utf-8")).strip()
-                    loan_obj.repayment_mothod = str(loan.xpath("p/span[2]/text()")[0].encode("utf-8"))\
+                    loan_obj.repayment = str(loan.xpath("p/span[2]/text()")[0].encode("utf-8"))\
                         .strip().replace("还款方式：", "")
                     loan_obj.borrow_amount = int(loan.xpath("p/span[3]/strong/text()")[0]) * 10000
 

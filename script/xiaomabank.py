@@ -83,7 +83,7 @@ def crawl():
                     if(("Content-Encoding" in respInfo) and (respInfo['Content-Encoding'] == "gzip")):
                         respHtml = zlib.decompress(resp.read(), 16+zlib.MAX_WBITS)
                         info_htm_parse = parse_html(respHtml, encoding="utf-8")
-                        loan_obj.repayment_mothod = str(info_htm_parse.xpath("//div[@id='pi_lt_bottom']/div[1]/div[1]/a/text()")[0].encode("utf-8"))
+                        loan_obj.repayment = str(info_htm_parse.xpath("//div[@id='pi_lt_bottom']/div[1]/div[1]/a/text()")[0].encode("utf-8"))
 
                     loan_obj.db_create(db)
 

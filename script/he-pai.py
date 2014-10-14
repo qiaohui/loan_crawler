@@ -78,7 +78,7 @@ def crawl():
                     loan_obj.period = loan["lN_TERM"]
                     loan_obj.period_unit = loan["lN_TERM_UNIT_DESC"]
                     loan_obj.schedule = str(loan["bID_SCHD"])
-                    loan_obj.repayment_mothod = loan["pAY_METH_DESC"]
+                    loan_obj.repayment = loan["pAY_METH_DESC"]
 
                     loan_obj.db_create(db)
 

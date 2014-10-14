@@ -85,7 +85,7 @@ def crawl():
                     # 这里需要进入详情页
                     loan_info_htm = download_page(loan_obj.href, headers={'Referee': url, 'User-Agent': DEFAULT_UA})
                     loan_info_htm_parse = parse_html(loan_info_htm, encoding="UTF-8")
-                    loan_obj.repayment_mothod = str(loan_info_htm_parse.xpath("//div[@class='inright']/table[@class='idetable']")[0].xpath("tr[2]/td[2]/span/text()")[0].encode("utf-8")).strip()
+                    loan_obj.repayment = str(loan_info_htm_parse.xpath("//div[@class='inright']/table[@class='idetable']")[0].xpath("tr[2]/td[2]/span/text()")[0].encode("utf-8")).strip()
 
                     loan_obj.db_create(db)
 

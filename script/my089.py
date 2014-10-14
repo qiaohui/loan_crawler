@@ -83,7 +83,7 @@ def crawl():
                         loan_obj.period = str(loan.xpath("dd[5]/span/text()")[0].encode("UTF-8")).strip().replace(" ", "")
                         s = str(loan.xpath("dd[5]/text()")[0].encode("UTF-8")).strip().replace(" ", "").replace("个", "")
                         loan_obj.period_unit = s.split("/")[0].strip()
-                        loan_obj.repayment_mothod = s.split("/")[1].strip()
+                        loan_obj.repayment = s.split("/")[1].strip()
                         loan_obj.schedule = str(loan.xpath("dd[last()]/p/span/text()")[0].encode("UTF-8")).strip().replace("%", "")
                         loan_obj.db_create(db)
 
