@@ -29,6 +29,22 @@ def crawl_wzdai():
     url = "https://www.wzdai.com/invest/index.html?status=1&page=1&order=-3"
     request_headers = {'Referee': "https://www.wzdai.com", 'User-Agent': DEFAULT_UA}
 
+    company_id = 3
+
+    db = get_db_engine()
+    db_ids = list(db.execute("select original_id from loan where company_id=%s and status=0", company_id))
+    # db all
+    db_ids_set = set()
+    # 在线的所有id
+    online_ids_set = set()
+    # new
+    new_ids_set = set()
+    # update
+    update_ids_set = set()
+
+    for id in db_ids:
+        db_ids_set.add(id[0].encode("utf-8"))
+
     # debug
     if FLAGS.debug_parser:
         import pdb
@@ -41,7 +57,6 @@ def crawl_wzdai():
         page = int(str(pages_obj.encode("utf-8")).split("条")[1].split("页")[0])
         for p in range(1, page + 1):
             url = "https://www.wzdai.com/invest/index.html?status=1&page=" + str(p) + "&order=-3"
-            logger.info(url)
 
             loan_htm = download_page(url, request_headers)
             loan_obj = parse_html(loan_htm)
@@ -54,24 +69,24 @@ def crawl_wzdai():
                     rate = str(loan.xpath("div[@class='invest_box_Info']/div[@class='prize']/font/b/text()")[0])
                     text = loan.xpath("div[@class='invest_box_Info']/div[@class='text']")
                     loan_period = ""
-                    repayment_mothod = ""
+                    repayment = ""
                     for lp in text:
                         p = lxml.html.tostring(lp).strip().replace("\r\n", "").split("<br>")
                         html_parser = HTMLParser.HTMLParser()
                         loan_period = html_parser.unescape(p[0].replace('<div class="text">', "").strip()).encode("UTF-8").replace("借款期限：", "")
-                        repayment_mothod = html_parser.unescape(p[1].strip()).encode("UTF-8").replace("还款方式：", "")
+                        repayment = html_parser.unescape(p[1].strip()).encode("UTF-8").replace("还款方式：", "")
 
                     cast = loan.xpath("div[@class='invest_box_Info']/div[@class='text2']/text()")[0].strip()\
                         .encode("UTF-8").replace("已投：￥", "").replace("元","")
                     schedule = str(loan.xpath("div[@class='invest_box_Info']/div[@class='percent_big']/div[@class='percent_small']/font/text()")[0])
 
-                    logger.info(href,title,borrow_amount,rate,cast,schedule,loan_period, repayment_mothod)
+                    logger.info(href,title,borrow_amount,rate,cast,schedule,loan_period, repayment)
 
                     db = get_db_engine()
                     db.execute("insert into loan (company_id,url,title,borrow_amount,rate,loan_period,"
-                              "repayment_mothod,cast,schedule,crawl_status,status,create_time,update_time) "
+                              "repayment,cast,schedule,crawl_status,status,create_time,update_time) "
                                "values (1,%s,%s,%s,%s,%s,%s,%s,%s,0,0,now(),now())", href, title, borrow_amount,
-                               rate,loan_period,repayment_mothod,cast,schedule)
+                               rate,loan_period,repayment,cast,schedule)
 
     except:
         logger.error("url: %s xpath failed:%s", url, traceback.format_exc())

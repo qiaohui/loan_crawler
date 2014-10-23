@@ -39,3 +39,5 @@
 */20 * * * * root (cd /space/loan_crawler/script; /usr/local/bin/he-pai.py --use_logfile --verbose info)
 
 */20 * * * * root (cd /space/loan_crawler/script; /usr/local/bin/tuandai.py --use_logfile --verbose info)
+
+*/20 * * * * root (cd /space/loan_crawler/script; /usr/local/bin/longlongweb.py --use_logfile --verbose info)

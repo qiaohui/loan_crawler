@@ -68,8 +68,7 @@ def crawl():
                 else:
                     new_ids_set.add(original_id)
 
-                    loan_obj = Loan(company_id)
-                    loan_obj.original_id = original_id
+                    loan_obj = Loan(company_id, original_id)
                     loan_obj.href = "http://www.91wangcai.com" + href
                     loan_obj.title = autodecode(str(loan.xpath("div[@class='hd']/a/text()")[0].encode("gb2312"))).encode("utf-8")
 

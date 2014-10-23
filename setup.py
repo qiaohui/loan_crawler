@@ -44,6 +44,7 @@ setup(
                'script/niwodai.py',
                'script/he-pai.py',
                'script/tuandai.py',
+               'script/longlongweb.py',
                ],
     license="8741.cn",
     dependency_links=[],
